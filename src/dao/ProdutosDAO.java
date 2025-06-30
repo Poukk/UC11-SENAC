@@ -13,12 +13,14 @@ public class ProdutosDAO {
     PreparedStatement prep;
     ResultSet resultset;
     
-    public void cadastrarProduto(ProdutosDTO produto) {
+    public boolean cadastrarProduto(ProdutosDTO produto) {
         if (produto.getNome() == null || produto.getNome().trim().isEmpty()) {
-            return;
+            JOptionPane.showMessageDialog(null, "Nome do produto é obrigatório!");
+            return false;
         }
         if (produto.getValor() == null || produto.getValor() <= 0) {
-            return;
+            JOptionPane.showMessageDialog(null, "Valor do produto deve ser maior que zero!");
+            return false;
         }
         
         String sql = "INSERT INTO produtos (nome, valor, status) VALUES (?, ?, ?)";
@@ -30,8 +32,11 @@ public class ProdutosDAO {
             prep.setInt(2, produto.getValor());
             prep.setString(3, produto.getStatus());
             prep.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Produto cadastrado com sucesso!");
+            return true;
         } catch (SQLException erro) {
-            JOptionPane.showMessageDialog(null, "Erro ProdutosDAO cadastrar: " + erro.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro ao cadastrar produto: " + erro.getMessage());
+            return false;
         } finally {
             try {
                 if (prep != null) prep.close();
