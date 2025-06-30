@@ -1,4 +1,7 @@
-public class ProdutosDTO {    private Integer id;
+package dto;
+
+public class ProdutosDTO {
+    private Integer id;
     private String nome;
     private Integer valor;
     private String status;

@@ -1,3 +1,8 @@
+package view;
+
+import dao.ProdutosDAO;
+import dto.ProdutosDTO;
+
 public class cadastroVIEW extends javax.swing.JFrame {
 
     public cadastroVIEW() {
