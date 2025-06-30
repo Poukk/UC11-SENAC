@@ -78,4 +78,53 @@ public class ProdutosDAO {
         
         return listagem;
     }
+    
+    public boolean venderProduto(int id) {
+        String sqlCheck = "SELECT status FROM produtos WHERE id = ?";
+        String sqlUpdate = "UPDATE produtos SET status = 'Vendido' WHERE id = ? AND status = 'A Venda'";
+        conn = new conectaDAO().connectDB();
+        
+        try {
+            // Check if product exists and is available for sale
+            prep = conn.prepareStatement(sqlCheck);
+            prep.setInt(1, id);
+            resultset = prep.executeQuery();
+            
+            if (!resultset.next()) {
+                JOptionPane.showMessageDialog(null, "Produto com ID " + id + " não encontrado!");
+                return false;
+            }
+            
+            String status = resultset.getString("status");
+            if (!"A Venda".equals(status)) {
+                JOptionPane.showMessageDialog(null, "Produto já foi vendido ou não está disponível!");
+                return false;
+            }
+            
+            // Update product status to sold
+            prep = conn.prepareStatement(sqlUpdate);
+            prep.setInt(1, id);
+            int rowsAffected = prep.executeUpdate();
+            
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(null, "Produto vendido com sucesso!");
+                return true;
+            } else {
+                JOptionPane.showMessageDialog(null, "Erro ao vender produto!");
+                return false;
+            }
+            
+        } catch (SQLException erro) {
+            JOptionPane.showMessageDialog(null, "Erro ao vender produto: " + erro.getMessage());
+            return false;
+        } finally {
+            try {
+                if (resultset != null) resultset.close();
+                if (prep != null) prep.close();
+                if (conn != null) conn.close();
+            } catch (SQLException erro) {
+                JOptionPane.showMessageDialog(null, "Erro ao fechar conexão: " + erro.getMessage());
+            }
+        }
+    }
 }

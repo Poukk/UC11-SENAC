@@ -121,17 +121,31 @@ public class listagemVIEW extends javax.swing.JFrame {
     }
 
     private void btnVenderActionPerformed(java.awt.event.ActionEvent evt) {
-        String id = id_produto_venda.getText();
+        String id = id_produto_venda.getText().trim();
         
-        ProdutosDAO produtosdao = new ProdutosDAO();
+        // Input validation
+        if (id.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(null, "Por favor, insira o ID do produto!");
+            return;
+        }
         
-        //produtosdao.venderProduto(Integer.parseInt(id));
-        listarProdutos();
+        try {
+            int produtoId = Integer.parseInt(id);
+            ProdutosDAO produtosdao = new ProdutosDAO();
+            
+            boolean sucesso = produtosdao.venderProduto(produtoId);
+            
+            if (sucesso) {
+                id_produto_venda.setText("");
+                listarProdutos();
+            }
+        } catch (NumberFormatException e) {
+            javax.swing.JOptionPane.showMessageDialog(null, "ID deve ser um número válido!");
+        }
     }
 
     private void btnVendasActionPerformed(java.awt.event.ActionEvent evt) {
-        //vendasVIEW vendas = new vendasVIEW(); 
-        //vendas.setVisible(true);
+        javax.swing.JOptionPane.showMessageDialog(null, "Funcionalidade de consulta de vendas não implementada!");
     }
 
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {
@@ -167,7 +181,7 @@ public class listagemVIEW extends javax.swing.JFrame {
                 });
             }
         } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(null, "Erro ao carregar lista de produtos: " + e.getMessage());
         }
-    
     }
 }
